@@ -29,7 +29,7 @@ load	ldx #$fd33 	;posicion central del display
 write	inx		;ingresar la hora por teclado
 	ldaa ,x
 	cmpa #$3a
-	beq	write
+	beq write
 	wai
 	ldaa $ffff
 	staa ,x
@@ -94,7 +94,7 @@ chk	dex		  ;decrementar el index register
 	ldaa $00,x
 	inx
 	cmpa #$32
-	bne	cont
+	bne cont
 
 res	stab $00,x
 	dex
