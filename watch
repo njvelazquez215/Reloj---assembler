@@ -1,3 +1,6 @@
+//El siguiente programa es un reloj hecho para el microprocesador Motorola 6800
+//una vez iniciado deberá ingresarsen la hora por teclado
+
 load	ldx #$fd33 	;posicion central del display
 	ldab #$30 	;caragar el acumulador de memoria B
 	ldaa #$30 	;cargar el acumulador A
