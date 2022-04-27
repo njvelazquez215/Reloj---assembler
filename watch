@@ -1,0 +1,100 @@
+load	ldx #$fd33 	;posicion central del display
+	ldab #$30 	;caragar el acumulador de memoria B
+	ldaa #$30 	;cargar el acumulador A
+	staa $00,x 	;almacenar acumulador en memoria A
+	inx 		;incrementar el index register
+	staa $00,x
+	inx
+	ldaa #$3a	;los dos puntos del reloj
+	staa $00,x
+	inx
+	ldaa #$30
+	staa $00,x
+	inx
+	staa $00,x
+	inx
+	ldaa #$3a
+	staa $00,x
+	inx
+	ldaa #$30
+	staa $00,x
+	inx
+	staa $00,x
+	inx
+
+	ldx #$fd32
+write	inx		;ingresar la hora por teclado
+	ldaa ,x
+	cmpa #$3a
+	beq	write
+	wai
+	ldaa $ffff
+	staa ,x
+	cpx #$fd39
+	bne write
+
+loop	ldx #$fd3a	;caragar el index register - arranca el loop hasta llegar a 9
+
+	ldaa #$20	;un loop para demorar el reloj
+delay	deca		;decrementar el acumulador A
+	bne delay	;cuando llega a cero sale del loop
+
+	ldaa $00,x
+	inca		;incrementar el acumulador
+	staa $00,x 	;almacenar acumulador en memoria A
+	cmpa #$3a
+	bne loop
+	stab $00,x	;almacenar acumulador en la memoria
+	ldx #$fd39 	
+
+	ldaa $00,x
+	inca
+	staa $00,x
+	cmpa #$36
+	bne loop
+	stab $00,x
+	ldx #$fd37	;empiezan los minutos hasta 9
+
+	ldaa $00,x
+	inca		;incrementar acumulador A
+	staa $00,x	;almacenar acumulador en memoria A
+	cmpa #$3a	;compare el contenido de la memoria y el acumulador
+	bne loop	;si z no es igual a cero (la comparacion es igual - z se pone en 1) salta la llave
+	stab $00,x	;almacenar el acumuluidador de memoria B
+	ldx #$fd36 	;cargar el acumulador de memoria (minutos hasta 59)
+
+
+	ldaa $00,x
+	inca
+	staa $00,x
+	cmpa #$36
+	bne loop
+	stab $00,x
+	ldx #$fd34       ;empiezan las horas
+
+	ldaa $00,x
+	inca
+	staa $00,x
+	cmpa #$3a
+	bne chk
+
+cont	stab $00,x
+	ldx #$fb00
+	ldaa $00,x
+	inca
+	staa $00,x
+	cmpa #$32
+	bne loop
+	stab $00,x
+
+chk	dex		  ;decrementar el index register
+	ldaa $00,x
+	inx
+	cmpa #$32
+	bne	cont
+
+res	stab $00,x
+	dex
+	stab $00,x
+	jmp loop
+	.end
